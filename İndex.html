@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sevgi Anketi · Beni seviyor musun? 💘</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffdde1 0%, #f9c9e2 50%, #ffb6d9 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Uçuşan kalpler (arka planda) */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.6;
+            user-select: none;
+            animation: float 8s linear infinite;
+            color: #ff4d6d;
+            filter: drop-shadow(0 0 5px #ffb3c6);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 60px 60px 60px 60px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 30px 60px rgba(190, 70, 100, 0.25), 0 20px 30px rgba(0,0,0,0.1);
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            max-width: 750px;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #962d4e;
+            text-shadow: 4px 4px 0 #ffd1dc;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.8rem;
+        }
+
+        .subhead {
+            font-size: 1.2rem;
+            color: #b64b6b;
+            background: rgba(255,255,240,0.4);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+            margin-bottom: 1.5rem;
+            border: 1px solid white;
+        }
+
+        .question {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #5a1e32;
+            margin: 1rem 0 1rem 0;
+            background: rgba(255,230,240,0.6);
+            padding: 0.8rem 2rem;
+            border-radius: 70px;
+            display: inline-block;
+            box-shadow: 0 6px 15px #ffb6c1;
+            border: 2px solid white;
+        }
+
+        /* İstatistik kutusu */
+        .stats {
+            background: rgba(255, 220, 230, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            padding: 0.8rem 1.5rem;
+            margin: 1.2rem auto 1.8rem auto;
+            display: inline-flex;
+            gap: 2rem;
+            border: 2px solid white;
+            font-weight: 600;
+            color: #6d2e46;
+            font-size: 1.3rem;
+        }
+
+        .stats span {
+            background: white;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            color: #b23b5c;
+        }
+
+        .buttons-area {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 2.2rem;
+            margin: 2rem 0 1rem 0;
+            min-height: 150px;
+            position: relative;
+        }
+
+        .btn {
+            border: none;
+            font-weight: 700;
+            border-radius: 70px;
+            cursor: pointer;
+            transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.2s;
+            box-shadow: 0 15px 25px -8px rgba(150, 40, 70, 0.5);
+            border: 4px solid white;
+            font-size: 2rem;
+            padding: 1.2rem 2.8rem;
+            min-width: 180px;
+            letter-spacing: 1.5px;
+            position: relative;
+            z-index: 15;
+        }
+
+        .btn-yes {
+            background-color: #ff6f91;
+            color: #2f0e16;
+            border-color: #fff2f7;
+            transform: scale(1);
+            box-shadow: 0 0 20px #ff98b9;
+        }
+
+        .btn-no {
+            background-color: #b58b9c;
+            color: #231117;
+            border-color: #eed9e2;
+        }
+
+        .btn-no:hover {
+            background-color: #a47488;
+            transform: scale(0.97);
+        }
+
+        /* Hayır butonu sallanma efekti (JavaScript ile eklenen class) */
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        /* uyarı mesajı (hayır butonuna basınca çıkan) */
+        .warning-message {
+            background: #ffe5f0;
+            color: #ad2f55;
+            font-size: 1.7rem;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            margin: 0.5rem auto 1rem auto;
+            display: inline-block;
+            border: 3px solid #ff98b9;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            min-width: 260px;
+            text-align: center;
+            pointer-events: none;
+            font-weight: 600;
+            box-shadow: 0 5px 0 #ffb8cf;
+        }
+
+        .warning-message.show {
+            opacity: 1;
+        }
+
+        .message-box {
+            margin-top: 2rem;
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #a1304f;
+            background: #fff0f3d9;
+            padding: 1.5rem 2rem;
+            border-radius: 70px;
+            border: 4px dashed #ff6f91;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            word-break: break-word;
+            backdrop-filter: blur(5px);
+        }
+
+        .message-box.show {
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            font-size: 2rem;
+            color: #bc6c7c;
+        }
+
+        .footer i {
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+            background: rgba(255,255,255,0.5);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .footer i:hover {
+            transform: scale(1.2);
+            color: #b3405a;
+            background: white;
+        }
+
+        @media (max-width: 550px) {
+            h1 { font-size: 2.5rem; }
+            .question { font-size: 2rem; }
+            .btn { font-size: 1.5rem; padding: 0.8rem 1.8rem; min-width: 140px; }
+            .stats { font-size: 1rem; gap: 1rem; }
+            .warning-message { font-size: 1.3rem; min-width: 200px; }
+        }
+    </style>
+    <!-- Font Awesome ikonları için (footer) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Arkaplanda uçuşan statik kalpler (dekoratif) -->
+    <div class="floating-hearts" id="heartContainer"></div>
+
+    <div class="card">
+        <h1>💗 Sevgi Anketi 💗</h1>
+        <div class="subhead">⚠️ Bu anketten dönüş yoktur ⚠️</div>
+        <div class="question" id="soruText">Beni seviyor musun?</div>
+
+        <!-- İstatistik bölümü -->
+        <div class="stats">
+            <div>🔴 Hayır sayısı: <span id="noCounter">0</span></div>
+            <div>💚 Evet büyüklüğü: <span id="yesScale">1.0x</span></div>
+        </div>
+
+        <div class="buttons-area" id="buttonAlan">
+            <button class="btn btn-yes" id="evetBtn">Evet</button>
+            <button class="btn btn-no" id="hayirBtn">Hayır</button>
+        </div>
+
+        <!-- Hayır butonuna basınca çıkan mesaj -->
+        <div id="hayirUyari" class="warning-message"></div>
+
+        <!-- Evet tıklayınca çıkan asıl mesaj -->
+        <div id="sonMesaj" class="message-box">bunu biliyordum 🥰 bende seni seviyorum</div>
+
+        <!-- Footer sosyal simgeler (eğlencelik) -->
+        <div class="footer">
+            <i class="fa-regular fa-heart" onclick="alert('💖 Kalbim sensin!')"></i>
+            <i class="fa-regular fa-face-kiss-wink-heart" onclick="alert('Öpücükler 😘')"></i>
+            <i class="fa-regular fa-star" onclick="alert('Yıldızlar bile seni seviyor ⭐')"></i>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- DOM ELEMANLARI -----
+            const evetBtn = document.getElementById('evetBtn');
+            const hayirBtn = document.getElementById('hayirBtn');
+            const sonMesajDiv = document.getElementById('sonMesaj');
+            const soruText = document.getElementById('soruText');
+            const hayirUyariDiv = document.getElementById('hayirUyari');
+            const noCounterSpan = document.getElementById('noCounter');
+            const yesScaleSpan = document.getElementById('yesScale');
+            const heartContainer = document.getElementById('heartContainer');
+
+            // ----- DEĞİŞKENLER -----
+            let evetScale = 1.0;                // Evet butonu büyüklüğü
+            let hayirScale = 1.0;                // Hayır butonu büyüklüğü (küçülecek)
+            let hayirOpacity = 1.0;               // Hayır butonu opaklığı
+            let noClickCount = 0;                  // Hayır tıklama sayacı
+            let timeoutId = null;                   // uyarı mesajı zamanlayıcı
+
+            // Rastgele uyarı mesajları (daha zengin)
+            const uyariMesajlari = [
+                "Bir daha düşün istersen 🌸",
+                "Emin misiiin? 🥺",
+                "Yoksa evet mi? 🤔",
+                "Hayır? Cidden mi? 💔",
+                "Belki birazdan evet dersin",
+                "Israr ediyorum 😊",
+                "Hadi ama... 🥹",
+                "Bir şans daha ver ✨",
+                "Beni üzme 🤗",
+                "Bence evet ❤️",
+                "Yanlış tuşa bastın galiba",
+                "Gel vazgeç 💕",
+                "Bu kadar inkar yeter",
+                "Evet çok daha güzel",
+                "Kalbini dinle 💓"
+            ];
+
+            // ----- ARKA PLAN UÇUŞAN KALPLER -----
+            function createFloatingHearts(count = 15) {
+                for (let i = 0; i < count; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = ['❤️','🧡','💛','💚','💙','💜','🤍','💖','💗','💘'][Math.floor(Math.random() * 10)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 6 + 5) + 's'; // 5-11 saniye
+                    heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                    heart.style.animationDelay = Math.random() * -10 + 's'; // rastgele başlangıç
+                    heartContainer.appendChild(heart);
+                }
+            }
+            createFloatingHearts(25); // daha kalabalık
+
+            // ----- HAYIR BUTONUNA TIKLAMA -----
+            hayirBtn.addEventListener('click', function() {
+                // 1. Sayaç artar
+                noClickCount++;
+                noCounterSpan.textContent = noClickCount;
+
+                // 2. Evet butonunu büyüt
+                evetScale = Math.min(evetScale + 0.2, 3.5); // çok büyümesin
+                evetBtn.style.transform = `scale(${evetScale})`;
+                yesScaleSpan.textContent = evetScale.toFixed(1) + 'x';
+
+                // 3. Hayır butonunu küçült ve opaklığını azalt
+                hayirScale = Math.max(hayirScale - 0.07, 0.1);
+                hayirOpacity = Math.max(hayirOpacity - 0.07, 0.1);
+                hayirBtn.style.transform = `scale(${hayirScale})`;
+                hayirBtn.style.opacity = hayirOpacity;
+
+                // 4. Hayır butonu çok küçüldüyse tamamen gizle (tıklanamaz olsun)
+                if (hayirScale <= 0.15 || hayirOpacity <= 0.15) {
+                    hayirBtn.classList.add('hidden');
+                } else {
+                    // 5. Sallanma efekti ekle (küçülmeye devam ederken)
+                    hayirBtn.classList.add('shake');
+                    setTimeout(() => {
+                        hayirBtn.classList.remove('shake');
+                    }, 400);
+                }
+
+                // 6. Rastgele uyarı mesajı göster
+                if (timeoutId) clearTimeout(timeoutId);
+                const randomIndex = Math.floor(Math.random() * uyariMesajlari.length);
+                hayirUyariDiv.textContent = uyariMesajlari[randomIndex];
+                hayirUyariDiv.classList.add('show');
+                timeoutId = setTimeout(() => {
+                    hayirUyariDiv.classList.remove('show');
+                    timeoutId = null;
+                }, 1800); // 1.8 saniye görünsün
+            });
+
+            // ----- EVET BUTONUNA TIKLAMA -----
+            evetBtn.addEventListener('click', function() {
+                // 1. Hayır butonunu tamamen gizle (varsa)
+                hayirBtn.classList.add('hidden');
+                // 2. Soru ve istatistikleri gizle
+                soruText.style.display = 'none';
+                document.querySelector('.subhead').style.display = 'none';
+                document.querySelector('.stats').style.display = 'none';
+                // 3. Uyarı mesajını kapat
+                hayirUyariDiv.classList.remove('show');
+                if (timeoutId) clearTimeout(timeoutId);
+                // 4. Kalıcı mesajı göster
+                sonMesajDiv.classList.add('show');
+                // 5. Footer simgeleri şenlensin (ufak efekt)
+                document.querySelector('.footer').style.opacity = '0.8';
+            });
+
+            // ----- BAŞLANGIÇ AYARLARI -----
+            sonMesajDiv.classList.remove('show');
+            hayirUyariDiv.classList.remove('show');
+            // Butonlara başlangıç transformları
+            evetBtn.style.transform = `scale(${evetScale})`;
+            hayirBtn.style.transform = `scale(${hayirScale})`;
+            hayirBtn.style.opacity = hayirOpacity;
+        })();
+    </script>
+</body>
+</html>
